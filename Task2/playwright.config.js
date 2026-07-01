@@ -3,7 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const STATE_PATH = path.join(__dirname, 'state.json');
 /**
@@ -40,13 +41,33 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: 'global.setup.js',
+      testDir: './',
+      testMatch: 'global.setup.js'
     },
     {
-      name: 'smoke',
+      name: 'chromium',
       dependencies: ['setup'],
       testMatch: '**/*.spec.js',
       use: {
+        ...devices['Desktop Chrome'],
+        storageState: STATE_PATH
+      }
+    },
+    {
+      name: 'chromium',
+      dependencies: ['setup'],
+      testMatch: '**/*.spec.js',
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: STATE_PATH
+      }
+    },
+    {
+      name: 'chromium',
+      dependencies: ['setup'],
+      testMatch: '**/*.spec.js',
+      use: {
+        ...devices['Desktop Safari'],
         storageState: STATE_PATH
       }
     }
